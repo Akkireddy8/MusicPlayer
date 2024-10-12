@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User Registration - Sign Up"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/username_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"/>
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Gmail"/>
+
+    <EditText
+        android:id="@+id/password_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"/>
+
+    <EditText
+        android:id="@+id/retype_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Retype Password"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:id="@+id/signup_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"/>
+
+    <TextView
+        android:id="@+id/login_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already a user? Log in"
+        android:gravity="center"
+        android:paddingTop="10dp"/>
+</LinearLayout>
