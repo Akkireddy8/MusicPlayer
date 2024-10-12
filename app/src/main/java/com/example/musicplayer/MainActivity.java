@@ -1,24 +1,45 @@
-package com.example.musicplayer;
+package com.example.tunestream;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.view.View;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.musicplayer.R;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Button btnPlaylist;
+    private Button btnProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        // Initialize buttons
+        btnPlaylist = findViewById(R.id.btn_playlist);
+        btnProfile = findViewById(R.id.btn_profile);
+
+        // Set click listener for Playlist button
+        btnPlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to Playlist Activity
+                Intent intent = new Intent(MainActivity.this, PlaylistActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Set click listener for Profile button
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to Profile Activity
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
         });
     }
 }
