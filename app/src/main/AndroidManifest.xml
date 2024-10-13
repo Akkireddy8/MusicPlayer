@@ -19,7 +19,7 @@
             android:name=".now_playing_activity"
             android:exported="false" />
         <activity
-            android:name=".activity_signup"
+            android:name=".SignupActivity"
             android:exported="false" />
         <activity
             android:name=".activity_login"
