@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set click listener for Playlist button
         btnPlaylist.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, com.example.tunestream.PlaylistActivity.class);
+            Intent intent = new Intent(MainActivity.this, com.example.musicplayer.PlaylistActivity.class);
             startActivity(intent);
         });
 

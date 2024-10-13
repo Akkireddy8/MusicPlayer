@@ -16,7 +16,7 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".now_playing_activity"
+            android:name=".PlaylistActivity"
             android:exported="false" />
         <activity
             android:name=".SignupActivity"
