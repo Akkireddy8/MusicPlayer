@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.musicplayer.R;
-
 public class MainActivity extends AppCompatActivity {
-    private Button btnPlaylist, btnProfile;
+    private Button btnPlaylist, btnProfile, btnLogin;  // Added btnLogin for the login button
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize buttons
         btnPlaylist = findViewById(R.id.btn_playlist);
         btnProfile = findViewById(R.id.btn_profile);
+        btnLogin = findViewById(R.id.btn_login);  // Initialize the login button
 
         // Set click listener for Playlist button
         btnPlaylist.setOnClickListener(v -> {
@@ -28,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
         // Set click listener for Profile button
         btnProfile.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, com.example.tunestream.ProfileActivity.class);
+            startActivity(intent);
+        });
+
+        // Set click listener for Login button (added this)
+        btnLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, com.example.musicplayer.LoginActivity.class);
             startActivity(intent);
         });
     }

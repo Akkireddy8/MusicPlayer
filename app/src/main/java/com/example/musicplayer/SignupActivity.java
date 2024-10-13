@@ -1,4 +1,4 @@
-package com.example.tunestream;
+package com.example.musicplayer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,13 +30,13 @@ public class SignupActivity extends AppCompatActivity {
         // Sign-up button listener (Navigates to LoginActivity after sign-up logic)
         signupButton.setOnClickListener(v -> {
             // Add sign-up logic here
-            Intent intent = new Intent(SignupActivity.this, com.example.tunestream.LoginActivity.class);
+            Intent intent = new Intent(SignupActivity.this, com.example.musicplayer.LoginActivity.class);
             startActivity(intent);
         });
 
         // Login prompt listener
         loginPrompt.setOnClickListener(v -> {
-            Intent intent = new Intent(SignupActivity.this, com.example.tunestream.LoginActivity.class);
+            Intent intent = new Intent(SignupActivity.this, com.example.musicplayer.LoginActivity.class);
             startActivity(intent);
         });
     }
