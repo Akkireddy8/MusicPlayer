@@ -33,7 +33,7 @@
         android:id="@+id/btn_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View Profile"
+        android:text="User Profile"
         android:backgroundTint="#03DAC5"
         android:textColor="#FFFFFF"
         android:layout_marginBottom="16dp" />
