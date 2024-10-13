@@ -12,15 +12,17 @@ import java.util.List;
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder> {
 
     private List<Playlist> playlists;
+    private OnSongClickListener onSongClickListener;
 
-    public PlaylistAdapter(List<Playlist> playlists) {
+    public PlaylistAdapter(List<Playlist> playlists, OnSongClickListener onSongClickListener) {
         this.playlists = playlists;
+        this.onSongClickListener = onSongClickListener;
     }
 
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_playlist, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.playlist_item, parent, false);
         return new PlaylistViewHolder(view);
     }
 
@@ -29,7 +31,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         Playlist playlist = playlists.get(position);
         holder.playlistName.setText(playlist.getName());
         holder.playlistDescription.setText(playlist.getDescription());
-        // Set playlist image if available
+
+        // Handle click event for each song
+        holder.itemView.setOnClickListener(v -> onSongClickListener.onSongClick(playlist));
     }
 
     @Override
@@ -48,4 +52,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
             playlistDescription = itemView.findViewById(R.id.playlist_description);
         }
     }
+
+    // Interface for handling click events
+    public interface OnSongClickListener {
+        void onSongClick(Playlist playlist);
+    }
 }
+
