@@ -1,4 +1,4 @@
-package com.example.tunestream;
+package com.example.musicplayer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,13 +28,13 @@ public class LoginActivity extends AppCompatActivity {
         // Login button listener (For now, simply navigates to MainActivity)
         loginButton.setOnClickListener(v -> {
             // You can add login validation here
-            Intent intent = new Intent(LoginActivity.this, com.example.tunestream.MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, com.example.musicplayer.MainActivity.class);
             startActivity(intent);
         });
 
         // Sign-up prompt listener
         signUpPrompt.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, com.example.tunestream.SignupActivity.class);
+            Intent intent = new Intent(LoginActivity.this, com.example.musicplayer.SignupActivity.class);
             startActivity(intent);
         });
     }
