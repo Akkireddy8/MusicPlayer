@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">MusicPlayer</string>
+    <string-array name="theme_options">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System Default</item>
+    </string-array>
+
+    <string-array name="language_options">
+        <item>English</item>
+        <item>Spanish</item>
+        <item>French</item>
+        <item>German</item>
+    </string-array>
 </resources>
