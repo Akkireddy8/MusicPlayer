@@ -2,11 +2,13 @@ package com.example.musicplayer;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -18,6 +20,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);  // Ensure this matches your login layout file
+
+        // Set up the toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Initialize EditText fields and login button
         usernameEditText = findViewById(R.id.username);
@@ -45,9 +54,18 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
             } else {
                 // For now, assume the login is successful and redirect to PlaylistActivity
-                Intent intent = new Intent(LoginActivity.this, com.example.musicplayer.PlaylistActivity.class);
+                Intent intent = new Intent(LoginActivity.this, PlaylistActivity.class);
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();  // Finish current activity and go back to MainActivity
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

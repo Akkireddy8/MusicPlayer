@@ -8,6 +8,14 @@
     android:gravity="center"
     android:background="#F5F5F5">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:title="Profile"
+        android:titleTextColor="#FFFFFF" />
+
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="120dp"
