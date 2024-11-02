@@ -6,6 +6,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
+
     private Button btnPlaylist, btnProfile, btnLogin;
 
     @Override
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set click listener for Profile button
         btnProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, UserProfile.class); // Correct reference
+            Intent intent = new Intent(MainActivity.this, UserProfile.class);
             startActivity(intent);
         });
 
