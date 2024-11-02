@@ -4,12 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Button;
 
+import androidx.appcompat.widget.Toolbar;
+
 public class UserProfile extends AppCompatActivity {
 
+    // Existing declarations
     private ImageView profileImage;
     private TextView profileName, profileEmail;
     private Button btnEditProfile, btnLogout;
@@ -20,16 +25,19 @@ public class UserProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        // Initialize views
+        // Initialize toolbar and enable back button
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Initialize other views as before
         profileImage = findViewById(R.id.profile_image);
         profileName = findViewById(R.id.profile_name);
         profileEmail = findViewById(R.id.profile_email);
         btnEditProfile = findViewById(R.id.btn_edit_profile);
         btnLogout = findViewById(R.id.btn_logout);
-
-        // Static profile data for now
-        profileName.setText("John Doe");
-        profileEmail.setText("john.doe@example.com");
 
         // Set click listener for Edit Profile
         btnEditProfile.setOnClickListener(v -> {
@@ -41,9 +49,17 @@ public class UserProfile extends AppCompatActivity {
 
         // Set click listener for Log Out
         btnLogout.setOnClickListener(v -> {
-            // Handle log out and redirect to login screen
-            finish();
+            finish(); // End the activity, which returns to the previous screen
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();  // Finish current activity and go back to MainActivity
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
