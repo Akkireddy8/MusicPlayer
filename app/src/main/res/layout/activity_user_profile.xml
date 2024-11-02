@@ -8,7 +8,6 @@
     android:gravity="center"
     android:background="#F5F5F5">
 
-    <!-- Profile Picture -->
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="120dp"
@@ -16,7 +15,8 @@
         android:contentDescription="Profile Image"
         android:layout_gravity="center"
         android:layout_marginBottom="16dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_profile_placeholder" />
 
     <!-- User's Name -->
     <TextView
