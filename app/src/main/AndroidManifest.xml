@@ -28,6 +28,8 @@
             android:name=".SignupActivity"
             android:exported="false" />
 
+        <activity android:name=".EditProfileActivity" />
+
         <activity
             android:name=".UserProfile"
             android:exported="false"
