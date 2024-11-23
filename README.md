@@ -1,4 +1,4 @@
-MUSIC PLAYER
+TUNE STREAM \n
 GROUP 03
 Akkireddy Akshitha Katyaini Reddy
 Ashwitha Reddy Polasani
