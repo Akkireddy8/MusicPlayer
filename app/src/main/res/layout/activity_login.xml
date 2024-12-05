@@ -1,106 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <ImageView
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/image"
-        android:src="@drawable/app_logo"
-        android:layout_marginTop="40dp"/>
-
-    <com.google.android.material.card.MaterialCardView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="8dp"
-        android:layout_marginTop="40dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:padding="8dp"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_person_circle"
-                android:contentDescription="@string/image"/>
-
-            <EditText
-                android:id="@+id/txtEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_gravity="center_vertical"
-                android:background="@android:color/transparent"
-                android:hint="Email"
-                android:inputType="textEmailAddress" />
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="8dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:padding="8dp"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_lock"
-                android:contentDescription="@string/image"/>
-
-            <EditText
-                android:id="@+id/txtPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@android:color/transparent"
-                android:hint="Password"
-                android:inputType="textPassword" />
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="30dp"
         android:background="?attr/colorPrimary"
-        android:onClick="onLoginTapped"
-        android:text="Login"
-        android:textAllCaps="false"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:title="Profile"
+        android:titleTextColor="#FFFFFF"/>
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="16dp"
-        android:text="Don't have an Account? Signup"
-        android:textAllCaps="false"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="18sp"
+        android:text="Tune Stream"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:onClick="onSignupTapped"/>
+        android:gravity="center"/>
 
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"/>
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"/>
+
+    <TextView
+        android:id="@+id/sign_up_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New user? Sign up"
+        android:gravity="center"
+        android:paddingTop="10dp"/>
 </LinearLayout>
