@@ -24,24 +24,20 @@ Many users struggle with finding an easy-to-use, personalized music streaming ap
 
 **Prerequisites**</br>
 Before you begin, ensure you have:</br>
-
 •	Android Studio (latest stable version recommended)</br>
 •	Java Development Kit (JDK) version 11 or higher</br>
 •	An Android Emulator or physical device running Android 8.0 (API level 26) or above</br>
 
 **Installation**</br>
 1.**Clone the Repository**:</br>
-
 Copy code</br>
 git clone <repository-url>
 
 2.**Open the Project**:</br>
-
 •	Launch Android Studio.
 •	Select Open an Existing Project and navigate to the TuneStream directory.
 
 3.**Set Up Dependencies**:</br>
-
 •	Android Studio will automatically sync the Gradle files. If not, click on File > Sync Project with Gradle Files.</br>
 
 **Building and Running the App**</br>
