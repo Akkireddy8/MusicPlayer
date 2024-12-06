@@ -3,6 +3,7 @@ package com.org.tunestream.auth.views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
@@ -33,20 +34,12 @@ public class LoginActivity extends AppCompatActivity {
         String email = binding.txtEmail.getText().toString().trim();
         String password = binding.txtPassword.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email)) {
-            showAlert("Please enter your username.");
+        if (!validate(email, password)) {
             return;
         }
 
-        if (TextUtils.isEmpty(password)) {
-            showAlert("Please enter your password.");
-            return;
-        }
-
-        // Firestore login logic
         FireStoreManager.shared.login(this, email.toLowerCase(), password, success -> {
             if (success) {
-                //SceneDelegate.getInstance().loginCheckOrRestart();
                 startActivity(new Intent(this, HomeActivity.class));
             } else {
                 showAlert("Invalid username or password.");
@@ -54,10 +47,31 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private boolean validate(String email, String password) {
+        // Email validation
+        if (TextUtils.isEmpty(email)) {
+            showAlert("Please enter your email.");
+            return false;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            showAlert("Please enter a valid email address.");
+            return false;
+        }
 
-    // Method to show an alert as a Toast (alternative to iOS UIAlertController)
+        // Password validation
+        if (TextUtils.isEmpty(password)) {
+            showAlert("Please enter your password.");
+            return false;
+        }
+        if (password.length() < 6) {
+            showAlert("Password must be at least 6 characters long.");
+            return false;
+        }
+
+        return true;
+    }
+
     private void showAlert(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
-
