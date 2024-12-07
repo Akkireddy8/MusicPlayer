@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ItemViewHolder> {
     private final List<NotificationModel> itemList;
 
@@ -31,6 +30,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         NotificationModel item = itemList.get(position);
+        if (item.getTitle() != null)
+            holder.binding.title.setText(item.getTitle());
+
         holder.binding.message.setText(item.getMessage());
         long milliseconds = (item.getTimestamp().getSeconds()) * 1000 + (item.getTimestamp().getNanoseconds()) / 1000000; // Create an Instant object from milliseconds
         Date date = new Date(milliseconds);
