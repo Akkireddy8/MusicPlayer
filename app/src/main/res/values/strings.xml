@@ -8,8 +8,4 @@
     <string name="edit_details">Edit Details</string>
     <string name="notification">Notifications</string>
     <string name="register">Register</string>
-    <string name="email">Email</string>
-    <string name="no_playlist">You don\'t have any Playlist \nClick on \'+\' to create new Playlist</string>
-    <string name="no_notification">You don\'t have any notification</string>
-    <string name="no_shared_playlist">You don\'t have any shared Playlist</string>
 </resources>
