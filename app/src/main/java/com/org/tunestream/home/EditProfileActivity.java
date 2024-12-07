@@ -1,21 +1,25 @@
 package com.org.tunestream.home;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.org.tunestream.DialogUtils;
 import com.org.tunestream.R;
-import com.org.tunestream.SceneDelegate;
+import com.org.tunestream.auth.views.LoginActivity;
 import com.org.tunestream.databinding.ActivityEditProfileBinding;
 import com.org.tunestream.databinding.CustomAppBarBinding;
 import com.org.tunestream.firebase_manager.FireStoreManager;
 import com.org.tunestream.firebase_manager.UserDefaultsManager;
 import com.org.tunestream.models.UserModel;
+import com.org.tunestream.player.PlayerBaseActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,7 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends PlayerBaseActivity {
 
     private Calendar calendar;
     private String gender = "";
@@ -37,11 +41,12 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        ViewGroup viewGroup = findViewById(R.id.activity_content);
+        viewGroup.addView(binding.getRoot());
         customAppBarBinding = binding.customAppBar;
         customAppBarBinding.actionImage.setVisibility(View.VISIBLE);
         customAppBarBinding.actionImage.setOnClickListener(v -> {
-
+            onLogout();
         });
         customAppBarBinding.backImage.setOnClickListener(v -> {
             finish();
@@ -49,7 +54,6 @@ public class EditProfileActivity extends AppCompatActivity {
         customAppBarBinding.titleText.setText(getString(R.string.edit_details));
 
         getProfileData();
-        //previewImage.setClipToOutline(true);
 
         calendar = Calendar.getInstance();
         binding.maleRadioButton.setOnClickListener(v -> onMaleFemaleClick(binding.maleRadioButton));
@@ -83,27 +87,17 @@ public class EditProfileActivity extends AppCompatActivity {
             showAlertOnTop("Please enter binding.txtDOB.");
             return false;
         }
-
         return true;
     }
 
-    public void onLogout(View view) {
+    public void onLogout() {
         new AlertDialog.Builder(this)
                 .setMessage("Are you sure want to logout?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     FireStoreManager.shared.removeAllListeners();
-
-                    // Remove floating audio player view if exists
-                    /*View existingPlayerView = findViewById("1001");
-                    if (existingPlayerView != null) {
-                        ((ViewGroup) existingPlayerView.getParent()).removeView(existingPlayerView);
-                    }*/
-
-                    // Clear user defaults
-                    getSharedPreferences("user_prefs", MODE_PRIVATE).edit().clear().apply();
-
-                    // Restart login
-                    SceneDelegate.getInstance().loginCheckOrRestart();
+                    UserDefaultsManager.getInstance(this).clearUserDefaults();
+                    startActivity(new Intent(this, LoginActivity.class));
+                    finish();
                 })
                 .setNegativeButton("No", null)
                 .show();
@@ -118,10 +112,12 @@ public class EditProfileActivity extends AppCompatActivity {
             profileData.put("dob", binding.txtDOB.getText().toString());
             profileData.put("email", binding.txtEmail.getText().toString());
 
-            FireStoreManager.shared.updateProfile(documentId, profileData, (success) -> {
+            FireStoreManager.shared.updateProfile(this, documentId, profileData, (success) -> {
                 if (success) {
-                    showAlertOnTop("Profile Updated Successfully");
-                    finish();
+                    DialogUtils.showMessageDialog(this, "Success", "Profile updated successfully", (callback) -> {
+                        if (callback)
+                            finish();
+                    });
                 }
             });
         }
@@ -138,13 +134,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 gender = item.getGender();
                 password = item.getPassword();
 
-
-                if (gender.equals("male")) {
-                    binding.maleRadioButton.setChecked(true);
-                    binding.femaleRadioButton.setChecked(false);
-                } else {
-                    binding.maleRadioButton.setChecked(false);
-                    binding.femaleRadioButton.setChecked(true);
+                if (gender != null) {
+                    if (gender.equals("male")) {
+                        binding.maleRadioButton.setChecked(true);
+                        binding.femaleRadioButton.setChecked(false);
+                    } else {
+                        binding.maleRadioButton.setChecked(false);
+                        binding.femaleRadioButton.setChecked(true);
+                    }
                 }
             }
         });
@@ -168,7 +165,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void showAlertOnTop(String message) {
-        // Implement your alert logic here
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
 

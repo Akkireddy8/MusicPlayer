@@ -2,11 +2,11 @@ package com.org.tunestream.home;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.org.tunestream.R;
 import com.org.tunestream.adapters.PlaylistAdapter;
@@ -14,8 +14,7 @@ import com.org.tunestream.databinding.ActivityHomeBinding;
 import com.org.tunestream.firebase_manager.UserDefaultsManager;
 import com.org.tunestream.interfaces.OnClickInterface;
 import com.org.tunestream.models.Playlist;
-import com.org.tunestream.player.MusicViewModel;
-import com.org.tunestream.player.PlayerController;
+import com.org.tunestream.player.PlayerBaseActivity;
 import com.org.tunestream.playlist.views.CreatePlaylistActivity;
 import com.org.tunestream.playlist.views.SharedPlaylistActivity;
 import com.org.tunestream.playlist.views.SongsDetailsActivity;
@@ -23,22 +22,20 @@ import com.org.tunestream.viewmodels.ViewModel;
 
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.PointerIcon;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements OnClickInterface {
+public class HomeActivity extends PlayerBaseActivity implements OnClickInterface {
 
     private ActivityHomeBinding homeBinding;
     private PlaylistAdapter playlistAdapter;
@@ -49,10 +46,9 @@ public class HomeActivity extends AppCompatActivity implements OnClickInterface 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeBinding = ActivityHomeBinding.inflate(getLayoutInflater());
-        setContentView(homeBinding.getRoot());
-        homeBinding.welcomeMessage.setText("Welcome " + UserDefaultsManager.getInstance(this).getName());
+        ViewGroup viewGroup = findViewById(R.id.activity_content);
+        viewGroup.addView(homeBinding.getRoot());
 
-        homeBinding.layoutPlaylist.setVisibility(View.GONE);
         homeBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         playlistAdapter = new PlaylistAdapter(playlist, this);
         homeBinding.recyclerView.setAdapter(playlistAdapter);
@@ -83,8 +79,6 @@ public class HomeActivity extends AppCompatActivity implements OnClickInterface 
 
             }
         });
-
-        getPlayList();
     }
 
     private void onSearch() {
@@ -105,28 +99,21 @@ public class HomeActivity extends AppCompatActivity implements OnClickInterface 
         playlistAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getPlayList();
-        if (PlayerController.instance != null && PlayerController.isPlaying) {
-            MusicViewModel musicViewModel = MusicViewModel.getInstance();
-            PlayerController.getInstance(this, musicViewModel.getSong());
-        }
-    }
-
     private void getPlayList() {
         ViewModel.getInstance().getMyPlayList(this, playList -> {
-            if (playList.isEmpty()) {
-                homeBinding.layoutPlaylist.setVisibility(View.GONE);
+            if (playList != null && !playList.isEmpty()) {
+                homeBinding.recyclerView.setVisibility(View.VISIBLE);
+                homeBinding.txtNoPlaylist.setVisibility(View.GONE);
+
+                this.playlist.clear();
+                originalPlaylist.clear();
+                this.playlist.addAll(playList);
+                originalPlaylist.addAll(playList);
+                playlistAdapter.notifyDataSetChanged();
             } else {
-                homeBinding.layoutPlaylist.setVisibility(View.VISIBLE);
+                homeBinding.recyclerView.setVisibility(View.GONE);
+                homeBinding.txtNoPlaylist.setVisibility(View.VISIBLE);
             }
-            playlist.clear();
-            originalPlaylist.clear();
-            playlist.addAll(playList);
-            originalPlaylist.addAll(playList);
-            playlistAdapter.notifyDataSetChanged();
         });
     }
 
@@ -149,13 +136,13 @@ public class HomeActivity extends AppCompatActivity implements OnClickInterface 
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
             if (direction == ItemTouchHelper.LEFT) {
-                ViewModel.getInstance().deletePlayList(playlist.get(position), value ->
+                ViewModel.getInstance().deletePlayList(HomeActivity.this, playlist.get(position), value ->
                         getPlayList()
                 );
             } else if (direction == ItemTouchHelper.RIGHT) {
                 Intent intent = new Intent(HomeActivity.this, CreatePlaylistActivity.class);
                 intent.putExtra("moveFrom", "Edit");
-                intent.putExtra("playlist", (Serializable) playlist.get(position));
+                intent.putExtra("playlist", playlist.get(position));
                 startActivity(intent);
             }
         }
@@ -164,21 +151,59 @@ public class HomeActivity extends AppCompatActivity implements OnClickInterface 
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             View itemView = viewHolder.itemView;
-            int backgroundCornerOffset = 20;
+
+// Get itemView dimensions
+            final int itemViewHeight = itemView.getHeight();
+            final int itemViewTop = itemView.getTop();
+            final int itemViewBottom = itemView.getBottom();
+            final int itemViewLeft = itemView.getLeft();
+            final int itemViewRight = itemView.getRight();
+            int backgroundCornerOffset = 20; // Adjust for rounded corners if needed
+
+// Define text size and color
+            float textSize = 16 * itemView.getResources().getDisplayMetrics().density; // Text size in sp
+            Paint textPaint = new Paint();
+            textPaint.setAntiAlias(true);
+            textPaint.setTextSize(textSize);
+            textPaint.setColor(Color.WHITE); // Text color
 
             if (dX > 0) { // Swiping to the right
+                // Set background color for right swipe
                 background.setColor(Color.BLUE);
-                background.setBounds(itemView.getLeft(), itemView.getTop(),
-                        itemView.getLeft() + ((int) dX) + backgroundCornerOffset,
-                        itemView.getBottom());
+                background.setBounds(itemViewLeft, itemViewTop,
+                        itemViewLeft + ((int) dX) + backgroundCornerOffset, itemViewBottom);
+                background.draw(c);
+
+                // Draw "Edit" text
+                String text = "Edit";
+                float textWidth = textPaint.measureText(text);
+                float textMargin = (itemViewHeight - textSize) / 2;
+
+                float textLeft = itemViewLeft + textMargin;
+                float textBottom = itemViewBottom - textMargin;
+
+                c.drawText(text, textLeft, textBottom, textPaint);
             } else if (dX < 0) { // Swiping to the left
+                // Set background color for left swipe
                 background.setColor(Color.RED);
-                background.setBounds(itemView.getRight() + ((int) dX) - backgroundCornerOffset,
-                        itemView.getTop(), itemView.getRight(), itemView.getBottom());
-            } else { // view is unSwiped
+                background.setBounds(itemViewRight + ((int) dX) - backgroundCornerOffset,
+                        itemViewTop, itemViewRight, itemViewBottom);
+                background.draw(c);
+
+                // Draw "Delete" text
+                String text = "Delete";
+                float textWidth = textPaint.measureText(text);
+                float textMargin = (itemViewHeight - textSize) / 2;
+
+                float textRight = itemViewRight - textMargin;
+                float textLeft = textRight - textWidth;
+                float textBottom = itemViewBottom - textMargin;
+
+                c.drawText(text, textLeft, textBottom, textPaint);
+            } else { // View is unswiped
                 background.setBounds(0, 0, 0, 0);
             }
-            background.draw(c);
+
         }
     };
 
@@ -213,6 +238,15 @@ public class HomeActivity extends AppCompatActivity implements OnClickInterface 
         Intent intent = new Intent(this, SongsDetailsActivity.class);
         intent.putExtra("playlist", playlist);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        homeBinding.welcomeMessage.setText("Welcome " + UserDefaultsManager.getInstance(HomeActivity.this).getName());
+        getPlayList();
+        if (mYouTubePlayer == null)
+            mYouTubePlayer = musicViewModel.getYouTubePlayer();
     }
 }
 
