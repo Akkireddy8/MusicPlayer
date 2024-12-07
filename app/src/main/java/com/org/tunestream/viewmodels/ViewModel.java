@@ -17,22 +17,19 @@ public class ViewModel {
     }
 
     public void getMyPlayList(Context context, FireStoreCallback<List<Playlist>> callback) {
-        // Pass context as the first argument
         FireStoreManager.shared.getPlaylists(context, getEmail(context), callback::onCallback);
     }
 
     public void getSharedPlayList(Context context, FireStoreCallback<List<Playlist>> callback) {
-        // Pass context as the first argument
         FireStoreManager.shared.getSharedPlaylists(context, getEmail(context), callback::onCallback);
     }
 
     public void getSongs(Context context, String documentID, FireStoreCallback<List<Song>> callback) {
-        // Add context as the first argument for getSongList
         FireStoreManager.shared.getSongList(context, documentID, callback::onCallback);
     }
 
-    public void deletePlayList(Playlist playList, FireStoreCallback<Boolean> callback) {
-        FireStoreManager.shared.deletePlaylist(playList.getDocumentId(), success -> {
+    public void deletePlayList(Context context, Playlist playList, FireStoreCallback<Boolean> callback) {
+        FireStoreManager.shared.deletePlaylist(context, playList.getDocumentId(), success -> {
             if (success) {
                 System.out.println("Playlist deleted successfully");
             } else {
@@ -43,11 +40,11 @@ public class ViewModel {
     }
 
     public void addPlayList(Context context, String name, String description, FireStoreCallback<Void> callback) {
-        FireStoreManager.shared.addPlaylist(name, description, getEmail(context), callback::onCallback);
+        FireStoreManager.shared.addPlaylist(context, name, description, getEmail(context), callback::onCallback);
     }
 
     public void editPlayList(Context context, String name, String description, String documentId, FireStoreCallback<Void> callback) {
-        FireStoreManager.shared.editPlaylist(name, description, getEmail(context), documentId, callback::onCallback);
+        FireStoreManager.shared.editPlaylist(context, name, description, getEmail(context), documentId, callback::onCallback);
     }
 
     private String getEmail(Context context) {
@@ -59,3 +56,4 @@ public class ViewModel {
         void onCallback(T result);
     }
 }
+
