@@ -1,4 +1,4 @@
-package com.example.musicplayer;
+package com.org.tunestream;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.musicplayer;
+package com.org.tunestream;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.musicplayer", appContext.getPackageName());
+        assertEquals("com.org.tunestream", appContext.getPackageName());
     }
 }
