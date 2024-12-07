@@ -3,30 +3,25 @@ package com.org.tunestream.playlist.views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
+import android.view.ViewGroup;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.org.tunestream.DialogUtils;
 import com.org.tunestream.R;
 import com.org.tunestream.adapters.SongsDetailsAdapter;
 import com.org.tunestream.databinding.ActivitySongsDetailsBinding;
 import com.org.tunestream.databinding.CustomAppBarBinding;
-import com.org.tunestream.firebase_manager.FireStoreManager;
+import com.org.tunestream.player.PlayerBaseActivity;
 import com.org.tunestream.interfaces.OnSongClickInterface;
 import com.org.tunestream.models.Playlist;
 import com.org.tunestream.models.Song;
-import com.org.tunestream.player.MusicViewModel;
-import com.org.tunestream.player.PlayerActivity;
-import com.org.tunestream.player.PlayerController;
 import com.org.tunestream.viewmodels.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongsDetailsActivity extends AppCompatActivity implements OnSongClickInterface {
+public class SongsDetailsActivity extends PlayerBaseActivity implements OnSongClickInterface {
 
     private ActivitySongsDetailsBinding songsDetailsBinding;
     private CustomAppBarBinding customAppBarBinding;
@@ -39,7 +34,9 @@ public class SongsDetailsActivity extends AppCompatActivity implements OnSongCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         songsDetailsBinding = ActivitySongsDetailsBinding.inflate(getLayoutInflater());
-        setContentView(songsDetailsBinding.getRoot());
+        ViewGroup viewGroup = findViewById(R.id.activity_content);
+        viewGroup.addView(songsDetailsBinding.getRoot());
+
         customAppBarBinding = songsDetailsBinding.customAppBar;
         customAppBarBinding.backImage.setOnClickListener(v -> {
             finish();
@@ -68,30 +65,14 @@ public class SongsDetailsActivity extends AppCompatActivity implements OnSongCli
                 } else {
                     songsDetailsBinding.recyclerView.setVisibility(View.GONE);
                     songsDetailsBinding.noSongs.setVisibility(View.VISIBLE);
+                    songsDetailsBinding.shareMusic.setVisibility(View.GONE);
                 }
             }
         }
     }
 
     public void onShareMusic(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Enter Email");
-        builder.setMessage("Please enter user email address");
-
-        final EditText input = new EditText(this);
-        input.setHint("Email");
-        builder.setView(input);
-
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            String email = input.getText().toString().toLowerCase();
-            if (!email.isEmpty()) {
-                FireStoreManager.shared.sharePlaylist(playlist.getDocumentId(), email);
-            }
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-        builder.show();
+        DialogUtils.showCustomAlertDialog(this, "Enter Email", "Please enter user email address", playlist.getDocumentId(), playlist.getName());
     }
 
     public void onAddMusic(View view) {
@@ -102,10 +83,14 @@ public class SongsDetailsActivity extends AppCompatActivity implements OnSongCli
     }
 
     private void getSongs() {
-        ViewModel.getInstance().getSongs(playlist.getDocumentId(), songs -> {
+        ViewModel.getInstance().getSongs(this, playlist.getDocumentId(), songs -> {
             if (songs != null && !songs.isEmpty()) {
                 songsDetailsBinding.recyclerView.setVisibility(View.VISIBLE);
                 songsDetailsBinding.noSongs.setVisibility(View.GONE);
+                if (moveFrom != null && moveFrom.equals("Shared"))
+                    songsDetailsBinding.shareMusic.setVisibility(View.GONE);
+                else songsDetailsBinding.shareMusic.setVisibility(View.VISIBLE);
+
                 this.songs.clear();
                 this.songs.addAll(songs);
                 songsDetailsBinding.numberOfSongs.setText(this.songs.size() + " Songs");
@@ -113,21 +98,22 @@ public class SongsDetailsActivity extends AppCompatActivity implements OnSongCli
             } else {
                 songsDetailsBinding.recyclerView.setVisibility(View.GONE);
                 songsDetailsBinding.noSongs.setVisibility(View.VISIBLE);
+                songsDetailsBinding.shareMusic.setVisibility(View.GONE);
             }
         });
     }
 
     @Override
     public void onItemClick(Song song) {
-        MusicViewModel musicViewModel = MusicViewModel.getInstance();
         musicViewModel.setMusicDetails(song);
-        PlayerController.getInstance(this, musicViewModel.getSong());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         getSongs();
+        if (musicViewModel.getIsPlayerActive().getValue() != null)
+            resumeVideo();
     }
 }
 

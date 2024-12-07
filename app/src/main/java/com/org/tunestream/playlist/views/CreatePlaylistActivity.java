@@ -2,18 +2,21 @@ package com.org.tunestream.playlist.views;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.org.tunestream.DialogUtils;
 import com.org.tunestream.R;
 import com.org.tunestream.databinding.ActivityCreatePlaylistBinding;
 import com.org.tunestream.databinding.CustomAppBarBinding;
 import com.org.tunestream.models.Playlist;
+import com.org.tunestream.player.PlayerBaseActivity;
 import com.org.tunestream.viewmodels.ViewModel;
 
-public class CreatePlaylistActivity extends AppCompatActivity {
+public class CreatePlaylistActivity extends PlayerBaseActivity {
 
     private ActivityCreatePlaylistBinding createPlaylistBinding;
     private CustomAppBarBinding customAppBarBinding;
@@ -24,7 +27,8 @@ public class CreatePlaylistActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createPlaylistBinding = ActivityCreatePlaylistBinding.inflate(getLayoutInflater());
-        setContentView(createPlaylistBinding.getRoot());
+        ViewGroup viewGroup = findViewById(R.id.activity_content);
+        viewGroup.addView(createPlaylistBinding.getRoot());
         customAppBarBinding = createPlaylistBinding.customAppBar;
         customAppBarBinding.backImage.setOnClickListener(v -> {
             finish();
@@ -43,10 +47,6 @@ public class CreatePlaylistActivity extends AppCompatActivity {
         }
     }
 
-    public void backButton(View view) {
-        finish();
-    }
-
     public void onCreatePlaylistTapped(View view) {
         if (createPlaylistBinding.playlistName.getText().toString().isEmpty()) {
             showAlertOnTop("Please add playlist name");
@@ -62,14 +62,18 @@ public class CreatePlaylistActivity extends AppCompatActivity {
             ViewModel.getInstance().editPlayList(this, createPlaylistBinding.playlistName.getText().toString(), createPlaylistBinding.playlistDescription.getText().toString(), playlist.getDocumentId(), new ViewModel.FireStoreCallback<Void>() {
                 @Override
                 public void onCallback(Void result) {
-                    CreatePlaylistActivity.this.finish();
+                    DialogUtils.showMessageDialog(CreatePlaylistActivity.this, "Message", "Playlist updated successfully", response -> {
+                        CreatePlaylistActivity.this.finish();
+                    });
                 }
             });
         else
             ViewModel.getInstance().addPlayList(this, createPlaylistBinding.playlistName.getText().toString(), createPlaylistBinding.playlistDescription.getText().toString(), new ViewModel.FireStoreCallback<Void>() {
                 @Override
                 public void onCallback(Void result) {
-                    CreatePlaylistActivity.this.finish();
+                    DialogUtils.showMessageDialog(CreatePlaylistActivity.this, "Message", "Playlist created successfully", response -> {
+                        CreatePlaylistActivity.this.finish();
+                    });
                 }
             });
     }

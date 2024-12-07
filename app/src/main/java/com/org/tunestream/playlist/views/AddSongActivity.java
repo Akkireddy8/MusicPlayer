@@ -2,16 +2,20 @@ package com.org.tunestream.playlist.views;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.org.tunestream.DialogUtils;
 import com.org.tunestream.R;
 import com.org.tunestream.databinding.ActivityAddSongBinding;
 import com.org.tunestream.databinding.CustomAppBarBinding;
 import com.org.tunestream.firebase_manager.FireStoreManager;
+import com.org.tunestream.player.PlayerBaseActivity;
 
-public class AddSongActivity extends AppCompatActivity {
+public class AddSongActivity extends PlayerBaseActivity {
 
     private ActivityAddSongBinding addSongBinding;
     private CustomAppBarBinding customAppBarBinding;
@@ -22,7 +26,8 @@ public class AddSongActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addSongBinding = ActivityAddSongBinding.inflate(getLayoutInflater());
-        setContentView(addSongBinding.getRoot());
+        ViewGroup viewGroup = findViewById(R.id.activity_content);
+        viewGroup.addView(addSongBinding.getRoot());
         customAppBarBinding = addSongBinding.customAppBar;
         customAppBarBinding.backImage.setOnClickListener(v -> {
             finish();
@@ -54,21 +59,25 @@ public class AddSongActivity extends AppCompatActivity {
             return;
         }*/
 
-        String artist = addSongBinding.songArtist.getText().toString();
-        if (artist.isEmpty()) {
-            artist = "Unknown";
+        if (addSongBinding.songArtist.getText().toString().isEmpty()) {
+            showAlertOnTop("Artist Name Required");
+            return;
         }
 
-        FireStoreManager.shared.addSongToPlaylist(playListName, playListDocumentId, addSongBinding.songId.getText().toString(), addSongBinding.songTitle.getText().toString(), artist, new FireStoreManager.FireStoreCallback<Void>() {
+        FireStoreManager.shared.addSongToPlaylist(this, playListName, playListDocumentId, addSongBinding.songId.getText().toString(), addSongBinding.songTitle.getText().toString(), addSongBinding.songArtist.getText().toString(), new FireStoreManager.FireStoreCallback<Void>() {
             @Override
             public void onCallback(Void result) {
-                AddSongActivity.this.finish();
+                DialogUtils.showMessageDialog(AddSongActivity.this, "Message", "Song added successfully", result1 -> {
+                    if (result1) {
+                        finish();
+                    }
+                });
             }
         });
     }
 
     private void showAlertOnTop(String message) {
-        // Implement your alert logic here
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
 

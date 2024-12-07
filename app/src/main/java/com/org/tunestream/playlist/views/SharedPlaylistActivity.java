@@ -4,24 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.org.tunestream.R;
 import com.org.tunestream.adapters.SharedPlaylistAdapter;
 import com.org.tunestream.databinding.ActivitySharedPlaylistBinding;
 import com.org.tunestream.databinding.CustomAppBarBinding;
+import com.org.tunestream.player.PlayerBaseActivity;
 import com.org.tunestream.interfaces.OnClickInterface;
 import com.org.tunestream.models.Playlist;
 import com.org.tunestream.viewmodels.ViewModel;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SharedPlaylistActivity extends AppCompatActivity implements OnClickInterface {
+public class SharedPlaylistActivity extends PlayerBaseActivity implements OnClickInterface {
 
     private ActivitySharedPlaylistBinding sharedPlaylistBinding;
     private CustomAppBarBinding customAppBarBinding;
@@ -33,7 +34,8 @@ public class SharedPlaylistActivity extends AppCompatActivity implements OnClick
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPlaylistBinding = ActivitySharedPlaylistBinding.inflate(getLayoutInflater());
-        setContentView(sharedPlaylistBinding.getRoot());
+        ViewGroup viewGroup = findViewById(R.id.activity_content);
+        viewGroup.addView(sharedPlaylistBinding.getRoot());
         customAppBarBinding = sharedPlaylistBinding.customAppBar;
         customAppBarBinding.backImage.setOnClickListener(v -> {
             finish();
@@ -43,8 +45,6 @@ public class SharedPlaylistActivity extends AppCompatActivity implements OnClick
         sharedPlaylistBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SharedPlaylistAdapter(playlist, this);
         sharedPlaylistBinding.recyclerView.setAdapter(adapter);
-
-        getSharedPlayList();
 
         sharedPlaylistBinding.searchImage.setOnClickListener(v -> {
             onSearch(sharedPlaylistBinding.searchTF.getText().toString());
@@ -64,10 +64,18 @@ public class SharedPlaylistActivity extends AppCompatActivity implements OnClick
             public void afterTextChanged(Editable s) {
             }
         });
+        getSharedPlayList();
     }
 
     private void getSharedPlayList() {
-        ViewModel.getInstance().getSharedPlayList(this, playList -> {
+        ViewModel.getInstance().getSharedPlayList(SharedPlaylistActivity.this, playList -> {
+            if (playList.isEmpty()) {
+                sharedPlaylistBinding.recyclerView.setVisibility(View.GONE);
+                sharedPlaylistBinding.txtNoData.setVisibility(View.VISIBLE);
+            } else {
+                sharedPlaylistBinding.recyclerView.setVisibility(View.VISIBLE);
+                sharedPlaylistBinding.txtNoData.setVisibility(View.GONE);
+            }
             playlist.clear();
             playlist.addAll(playList);
             originalPlaylist.clear();
@@ -97,7 +105,7 @@ public class SharedPlaylistActivity extends AppCompatActivity implements OnClick
     @Override
     public void onItemClick(Playlist playlist) {
         Intent intent = new Intent(this, SongsDetailsActivity.class);
-        intent.putExtra("playlist", (Serializable) playlist);
+        intent.putExtra("playlist", playlist);
         intent.putExtra("moveFrom", "Shared");
         startActivity(intent);
     }
