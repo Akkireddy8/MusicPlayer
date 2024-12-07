@@ -17,15 +17,18 @@ public class ViewModel {
     }
 
     public void getMyPlayList(Context context, FireStoreCallback<List<Playlist>> callback) {
-        FireStoreManager.shared.getPlaylists(getEmail(context), callback::onCallback);
+        // Pass context as the first argument
+        FireStoreManager.shared.getPlaylists(context, getEmail(context), callback::onCallback);
     }
 
     public void getSharedPlayList(Context context, FireStoreCallback<List<Playlist>> callback) {
-        FireStoreManager.shared.getSharedPlaylists(getEmail(context), callback::onCallback);
+        // Pass context as the first argument
+        FireStoreManager.shared.getSharedPlaylists(context, getEmail(context), callback::onCallback);
     }
 
-    public void getSongs(String documentID, FireStoreCallback<List<Song>> callback) {
-        FireStoreManager.shared.getSongList(documentID, callback::onCallback);
+    public void getSongs(Context context, String documentID, FireStoreCallback<List<Song>> callback) {
+        // Add context as the first argument for getSongList
+        FireStoreManager.shared.getSongList(context, documentID, callback::onCallback);
     }
 
     public void deletePlayList(Playlist playList, FireStoreCallback<Boolean> callback) {
@@ -56,4 +59,3 @@ public class ViewModel {
         void onCallback(T result);
     }
 }
-
