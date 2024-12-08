@@ -48,6 +48,11 @@ git clone <repository-url>
 •	Connect your Android device via USB or start an emulator.</br>
 •	Click on the Run button (green triangle) or use the shortcut Shift+F10.</br>
 
+3.**Login Credentials**:</br>
+Pre-registered credentials</br>
+User Name: akki0826@gmail.com</br>
+Password: Akki@0826</br>
+
 **Project Structure**</br>
 app/src/main/java: Contains the source code, including activities, fragments, and ViewModels.</br>
 app/src/main/res: Stores resources like layouts, drawables, and strings.</br>
