@@ -16,7 +16,7 @@
         android:theme="@style/Theme.TuneStream"
         tools:targetApi="31">
         <activity
-            android:name=".home.HomeActivity"
+            android:name=".auth.views.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,20 +24,42 @@
             </intent-filter>
         </activity>
         <activity android:name="com.org.tunestream.auth.views.SignupActivity"
-            android:exported="true"  />
-        <activity android:name=".auth.views.LoginActivity"
             android:exported="true" />
+        <activity android:name=".home.HomeActivity"
+            android:exported="true"
+            android:launchMode="singleTask"/>
         <activity android:name="com.org.tunestream.playlist.views.CreatePlaylistActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity android:name="com.org.tunestream.auth.views.ForgotPasswordActivity"
-            android:exported="true"  />
-        <activity android:name="com.org.tunestream.playlist.views.SharedPlaylistActivity" />
-        <activity android:name="com.org.tunestream.playlist.views.SongsDetailsActivity" />
-        <activity android:name="com.org.tunestream.playlist.views.AddSongActivity" />
-        <activity android:name="com.org.tunestream.home.EditProfileActivity" />
-        <activity android:name="com.org.tunestream.player.MusicBottomSheetController" />
-        <activity android:name="com.org.tunestream.player.PlayerActivity" />
-        <activity android:name="com.org.tunestream.home.NotificationActivity" />
-    </application>
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenSize"  />
+        <activity android:name="com.org.tunestream.playlist.views.SharedPlaylistActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.org.tunestream.playlist.views.SongsDetailsActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.org.tunestream.playlist.views.AddSongActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.org.tunestream.home.EditProfileActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.org.tunestream.home.NotificationActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.org.tunestream.player.PlayerBaseActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
 
+    </application>
 </manifest>
