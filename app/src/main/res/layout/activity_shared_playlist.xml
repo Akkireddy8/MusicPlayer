@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_gray"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -21,8 +22,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableEnd="@drawable/ic_search"
             android:background="@drawable/rectangle_background"
+            android:drawableEnd="@drawable/ic_search"
             android:hint="Search Playlist"
             android:textAllCaps="false"
             android:textSize="16sp" />
@@ -33,7 +34,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/image"
             android:src="@drawable/ic_search"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
 
     </LinearLayout>
@@ -42,6 +43,19 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/txtNoData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_shared_playlist"
+        android:textAllCaps="false"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 </LinearLayout>
